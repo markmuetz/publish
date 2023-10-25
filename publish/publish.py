@@ -125,25 +125,24 @@ class Publisher:
         # Filter out values of None.
         args_settings = {k: v for k, v in args_settings.items() if v is not None}
         dest_settings = {k: v for k, v in dest_settings.items() if v is not None}
-
         # Final settings is worked out from args_settings, dest_settings, pub_settings
-        # with precedence in that order.
-        settings = pub_settings.copy()
+        # with precedence in that order. (Set by insertion order into dict).
+        settings_locs = {
+            str(self.publish_settings_path): pub_settings,
+            f'{self.publish_settings_path}:dest_settings:{destination}': dest_settings,
+            'args': args_settings,
+        }
 
+        settings = {}
+        settings_set_by = {}
         def update_settings_set_by(sdict, sname):
             # return {k: (sdict.get(k, False), sname) for k in CommonSettings.__fields__.keys() if k in sdict}
             return {k: (v, sname) for k, v in sdict.items()}
 
-        settings_set_by = {}
-        settings_set_by.update(update_settings_set_by(pub_settings, str(self.publish_settings_path)))
+        for sloc, s in settings_locs.items():
+            settings.update(s)
+            settings_set_by.update(update_settings_set_by(s, sloc))
 
-        settings.update(dest_settings)
-        settings_set_by.update(
-            update_settings_set_by(dest_settings, f'{self.publish_settings_path}:dest_settings:{destination}')
-        )
-
-        settings.update(args_settings)
-        settings_set_by.update(update_settings_set_by(args_settings, 'args'))
         self.settings = settings
         self.settings_set_by = settings_set_by
 
