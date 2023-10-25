@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 import argparse
-import os
-import sys
 import importlib.util
 import inspect
+import os
+import shutil
 import subprocess as sp
+import sys
 from pathlib import Path
 from pprint import pprint
-import shutil
 from typing import Union
 
 import publish.example_settings as example_settings
 import publish.settings_template as settings_template
-from publish.publish_settings_schema import PublishSettings, CommonSettings
+from publish.publish_settings_schema import CommonSettings, PublishSettings
 
 # https://stackoverflow.com/a/9562273/54557
 # Doesn't write __pycache__ files.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from pathlib import Path
 import subprocess as sp
+from pathlib import Path
 
 try:
     from setuptools import setup
