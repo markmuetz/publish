@@ -15,7 +15,6 @@ SETTINGS = {
             ]
         },
         'release': {
-            'destination': 'release',
             'files': [
                 {
                     'source': '<enter_path_here>',
