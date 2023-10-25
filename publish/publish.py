@@ -10,7 +10,7 @@ from pprint import pprint
 import shutil
 from typing import Union
 
-import publish.example_settings
+import publish.example_settings as example_settings
 import publish.settings_template as settings_template
 from publish.publish_settings_schema import PublishSettings, CommonSettings
 
@@ -92,8 +92,11 @@ def main():
     publish_settings_path = Path(args.settings_file)
 
     if args.print_example_settings:
+        # Validate example settings.
         settings = PublishSettings(**example_settings.SETTINGS).dict()
-        pprint(SETTINGS, sort_dicts=False)
+        # pprint(settings, sort_dicts=False)
+        # Print actual code.
+        print(inspect.getsource(example_settings))
         sys.exit(0)
 
     if args.validate_only:

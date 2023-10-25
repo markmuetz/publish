@@ -1,4 +1,4 @@
-EXAMPLE_SETTINGS = {
+SETTINGS = {
     'ensure_make': True,
     'user_prompt': True,
     'git_allow_uncommitted': False,
@@ -32,7 +32,7 @@ EXAMPLE_SETTINGS = {
         'format': 'tgz',
         'prefix': 'intraseasonal_srp',
         'target': (
-            '~/Dropbox/Academic/Projects/COSMIC/Writeups/intraseasonal_srp/' 'archive/intraseasonal_srp_{version}.tgz'
+            '~/Dropbox/Academic/Projects/COSMIC/Writeups/intraseasonal_srp/archive/intraseasonal_srp_{version}.tgz'
         ),
     },
 }

@@ -49,7 +49,6 @@ class PublishSettings(CommonSettings):
 
     @validator('destinations', pre=True)
     def check_destinations(cls, v):
-        print(cls, v)
         assert v, 'There must be at least one destination'
         return v
 
