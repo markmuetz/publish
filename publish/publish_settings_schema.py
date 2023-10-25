@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import List, Optional, Literal
+from typing import Dict, List, Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 # Schema for publish settings.
@@ -22,8 +22,12 @@ class CommonSettings(BaseModel):
 
 
 class Destination(CommonSettings):
-    destination: str
     files: List[File]
+
+    @validator('files', pre=True)
+    def check_files(cls, v):
+        assert v, 'There must be at least one file to copy'
+        return v
 
     class Config:
         extra = 'forbid'
@@ -40,8 +44,14 @@ class Archive(BaseModel):
 
 
 class PublishSettings(CommonSettings):
-    destinations: List[Destination]
+    destinations: Dict[str, Destination]
     archive: Optional[Archive] = None
+
+    @validator('destinations', pre=True)
+    def check_destinations(cls, v):
+        print(cls, v)
+        assert v, 'There must be at least one destination'
+        return v
 
     class Config:
         extra = 'forbid'

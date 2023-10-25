@@ -18,6 +18,7 @@ from publish.publish_settings_schema import PublishSettings, CommonSettings
 # Doesn't write __pycache__ files.
 sys.dont_write_bytecode = True
 
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog='ProgramName',
@@ -128,15 +129,14 @@ def main():
     # Validate settings using the schema.
     pub_settings = PublishSettings(**settings_dict).dict()
 
-    destinations = {d['destination']: d
-                    for d in pub_settings['destinations']}
+    destinations = pub_settings.pop('destinations')
     if len(destinations) == 0:
         msg = 'At least one destination must be defined in settings'
         raise Exception(msg)
-    if len(destinations) != len(pub_settings['destinations']):
-        msg = ('Duplicate keys detected:\n' +
-               ', '.join([d['destination'] for d in pub_settings['destinations']]))
-        raise Exception(msg)
+    # if len(destinations) != len(pub_settings['destinations']):
+    #     msg = ('Duplicate keys detected:\n' +
+    #            ', '.join([d['destination'] for d in pub_settings['destinations']]))
+    #     raise Exception(msg)
 
     destination = args.destination
     if destination not in destinations:
@@ -171,7 +171,7 @@ def main():
     settings.update(args_settings)
     settings_set_by.update(update_settings_set_by(args_settings, 'args'))
 
-    settings.pop('destinations')
+    # settings.pop('destinations')
     files = settings.pop('files')
     if args.print_settings:
         pprint(settings)
