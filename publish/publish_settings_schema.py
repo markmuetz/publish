@@ -1,19 +1,20 @@
 from pathlib import Path
 from typing import Dict, List, Literal, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ConfigDict, validator
+
+
+class BaseSettings(BaseModel):
+    model_config = ConfigDict(extra='forbid')
 
 
 # Schema for publish settings.
-class File(BaseModel):
+class File(BaseSettings):
     source: Path
     target: Path
 
-    class Config:
-        extra = 'forbid'
 
-
-class CommonSettings(BaseModel):
+class CommonSettings(BaseSettings):
     ensure_make: Optional[bool] = None
     user_prompt: Optional[bool] = None
     git_allow_uncommitted: Optional[bool] = None
@@ -29,18 +30,12 @@ class Destination(CommonSettings):
         assert v, 'There must be at least one file to copy'
         return v
 
-    class Config:
-        extra = 'forbid'
 
-
-class Archive(BaseModel):
+class Archive(BaseSettings):
     branch: str
     format: str
     prefix: str
     target: Path
-
-    class Config:
-        extra = 'forbid'
 
 
 class PublishSettings(CommonSettings):
@@ -51,6 +46,3 @@ class PublishSettings(CommonSettings):
     def check_destinations(cls, v):
         assert v, 'There must be at least one destination'
         return v
-
-    class Config:
-        extra = 'forbid'
