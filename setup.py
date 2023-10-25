@@ -7,8 +7,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = sp.run('python publish/version.py',
-                 check=True, shell=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf8').stdout
+version = sp.run(
+    'python publish/version.py', check=True, shell=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf8'
+).stdout
 
 
 def read(fname):
@@ -40,17 +41,13 @@ setup(
     python_requires='>=3.10',
     install_requires=[
         'pydantic',
-        ],
-    entry_points={
-        'console_scripts': [
-            'publish=publish.publish:main'
-        ]
-    },
+    ],
+    entry_points={'console_scripts': ['publish=publish.publish:main']},
     classifiers=[
         'Environment :: Console',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3.9',
         'Development Status :: 5 - Alpha',
-        ],
-    )
+    ],
+)
