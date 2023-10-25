@@ -21,9 +21,8 @@ sys.dont_write_bytecode = True
 
 def build_parser():
     parser = argparse.ArgumentParser(
-        prog='ProgramName',
-        description='What the program does',
-        epilog='Text at the bottom of help')
+        prog='ProgramName', description='What the program does', epilog='Text at the bottom of help'
+    )
     parser.add_argument('destination', nargs='?', default='draft')
     parser.add_argument('-N', '--dry-run', action='store_true')
     parser.add_argument('-P', '--print-settings', action='store_true')
@@ -114,14 +113,19 @@ def main():
         sys.exit(0)
 
     if not publish_settings_path.exists():
-        msg = (f'There must be a file named "{publish_settings_path}" in the current directory\n'
-               'You can generate one using `publish -G`')
+        msg = (
+            f'There must be a file named "{publish_settings_path}" in the current directory\n'
+            'You can generate one using `publish -G`'
+        )
         raise Exception(msg)
 
     if args.dry_run:
+
         def run_active_cmd(cmd):
             print(cmd)
+
     else:
+
         def run_active_cmd(cmd):
             runcmd(cmd)
 
@@ -140,33 +144,29 @@ def main():
 
     destination = args.destination
     if destination not in destinations:
-        msg = (f'Destination name "{destination}" not recognized\n'
-               f'Must be one of: {", ".join(destinations.keys())}')
+        msg = f'Destination name "{destination}" not recognized\n' f'Must be one of: {", ".join(destinations.keys())}'
         raise Exception(msg)
 
     args_settings = vars(args)
     dest_settings = destinations[destination]
     # Filter out values of None.
-    args_settings = {k: v
-                     for k, v in args_settings.items()
-                     if v is not None}
-    dest_settings = {k: v
-                     for k, v in dest_settings.items()
-                     if v is not None}
+    args_settings = {k: v for k, v in args_settings.items() if v is not None}
+    dest_settings = {k: v for k, v in dest_settings.items() if v is not None}
 
     # Final settings is worked out from args_settings, dest_settings, pub_settings
     # with precedence in that order.
     settings = pub_settings.copy()
+
     def update_settings_set_by(sdict, sname):
-        return {k: (sdict.get(k, False), sname)
-                for k in CommonSettings.__fields__.keys()
-                if k in sdict}
+        return {k: (sdict.get(k, False), sname) for k in CommonSettings.__fields__.keys() if k in sdict}
 
     settings_set_by = {}
     settings_set_by.update(update_settings_set_by(pub_settings, str(publish_settings_path)))
 
     settings.update(dest_settings)
-    settings_set_by.update(update_settings_set_by(dest_settings, f'{publish_settings_path}:dest_settings:{destination}'))
+    settings_set_by.update(
+        update_settings_set_by(dest_settings, f'{publish_settings_path}:dest_settings:{destination}')
+    )
 
     settings.update(args_settings)
     settings_set_by.update(update_settings_set_by(args_settings, 'args'))
@@ -187,8 +187,7 @@ def main():
     git_status = runcmd('git status --porcelain').stdout
     if git_status:
         if not settings.get('git_allow_uncommitted', False):
-            msg = ('Uncommitted changes! Cannot run\n' +
-                   git_status)
+            msg = 'Uncommitted changes! Cannot run\n' + git_status
             raise Exception(msg)
         else:
             print('WARNING: Uncommitted changes.')
@@ -222,7 +221,6 @@ def main():
             print('Created file: {}'.format(target_path))
         else:
             print('Not created')
-
 
     if settings['archive']:
         asettings = settings['archive']
